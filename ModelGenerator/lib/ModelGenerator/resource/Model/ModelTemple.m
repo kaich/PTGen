@@ -14,9 +14,6 @@
     return [PROPERTY_MAPPING];
 }
 
-
-
 [TYPE_TRANSFORMER]
-
 
 @end

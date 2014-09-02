@@ -27,6 +27,9 @@ class CommonParam
     return {"string" => "NSString *",
             "int" => "NSInteger",
             "uint" => "NSUInteger",
+            "float" => "float",
+            "double" => "double",
+            "number" => "NSNumber",
             "date" => "NSDate *",
             "data" => "NSData *",
             "time" => "NSTimeInterval",
@@ -47,6 +50,8 @@ class CommonParam
   def CommonParam.reference_type_mapping
     return  {"string" => "strong",
               "int" => "assign",
+              "float" => "assign",
+              "double" => "assign",
               "uint" => "assign",
               "date" => "strong",
               "data" => "strong",

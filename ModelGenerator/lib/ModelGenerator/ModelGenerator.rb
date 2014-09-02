@@ -1,15 +1,17 @@
 require 'pathname'
-require './Announcement.rb'
-require_relative './CommonParam.rb'
-require_relative './FormatTransformer.rb'
-require_relative './CommandTask.rb'
 
 class ModelGenerator
+  autoload :Announcement,          'ModelGenerator/Announcement'
+  autoload :CommonParam,           'ModelGenerator/CommonParam'
+  autoload :FormatTransformer,     'ModelGenerator/FormatTransformer'
+  autoload :CommandTask,           'ModelGenerator/CommandTask'
+    
   attr_accessor :name
   attr_accessor :author
   attr_reader :project_name
   attr_reader :organization
   attr_reader :commandTask
+  
   
   def initialize
     @organization="<" +"#" + "organization" + "#" + ">"
@@ -27,7 +29,8 @@ class ModelGenerator
   end
   
   def generate_header
-      headerPath="./resource/Model/ModelTemple.h"
+      parent_path=File.expand_path('..', __FILE__)
+      headerPath="#{parent_path}/resource/Model/ModelTemple.h"
       
       annouce=Announcement.new
       file_declare=annouce.createDeclare
@@ -38,7 +41,8 @@ class ModelGenerator
       to_header_content.gsub!(CommonParam.entity_name,entity_name)
       to_header_content.gsub!(CommonParam.property_declare,self.generate_property_list)
       
-      f= File.new("./#{entity_name}.h","w")
+      
+      f= File.new("#{Dir.pwd}/#{entity_name}.h","w")
       f.syswrite(to_header_content)
            
   end
@@ -56,7 +60,8 @@ class ModelGenerator
   end
   
   def generate_source
-    source_path="./resource/Model/ModelTemple.m"
+    parent_path=File.expand_path('..', __FILE__)
+    source_path="#{parent_path}/resource/Model/ModelTemple.m"
     to_source_content=File.read(source_path)
     
     annouce=Announcement.new
@@ -70,7 +75,7 @@ class ModelGenerator
     to_source_content.gsub!(CommonParam.json_column_mapping,self.generate_json_column_mapping)
     to_source_content.gsub!(CommonParam.type_transformer,self.generate_formater)
     
-    f= File.new("./#{entity_name}.m","w")
+    f= File.new("#{Dir.pwd}/#{entity_name}.m","w")
     f.syswrite(to_source_content)
     
   end
@@ -108,7 +113,7 @@ class ModelGenerator
           
           formater_method_content= generate_formater_method_content(key,value,property_format,json_type,json_format)
           if formater_method_content !=nil
-            formater_content= "+(NSValueTransformer *) #{key}AtJSONTransformer {\n#{formater_method_content}\n}"
+            formater_content= "+(NSValueTransformer *) #{key}AtJSONTransformer {\n    #{formater_method_content}\n}"
           end
       end
       
@@ -124,9 +129,9 @@ class ModelGenerator
       elsif (property_type=="bool" && json_type=="int")
           content << "return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];\n"
       elsif property_type != json_type || (property_type == json_type  && property_format != json_formate)
-          content = %Q/return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {
-                                    return #{FormatTransformer.transform(property_type,property_format,json_type,json_formate)}
-                              } reverseBlock:^(NSDate *date) {
+          content = %Q/return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(#{CommonParam.type_mapping[json_type]} *x) {
+                                return #{FormatTransformer.transform(property_type,property_format,json_type,json_formate)}
+                              } reverseBlock:^(#{CommonParam.type_mapping[property_type]} *x) {
                                 return #{FormatTransformer.transform(json_type,json_formate,property_type,property_format)}
                               }];/
       elsif property_type=="mapping" && json_type=="mapping"
@@ -138,9 +143,9 @@ class ModelGenerator
           content << "return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:#{property_name}.class];"
       elsif property_type=="custom"
             content = %Q/return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {
-                            return <#ConvertFormat#>;"
+                            return <#ConvertFormat#>;
                         } reverseBlock:^(NSDate *date) {
-                            return <#ReverseConvertFormat#>;"
+                            return <#ReverseConvertFormat#>;
                         }];/
       else
         content=nil
