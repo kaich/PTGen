@@ -6,12 +6,12 @@ class CommandTask
   attr_reader :json_name_format_hash
   attr_reader :flags
   attr_reader :command
-  attr_reader :isreserve
+  attr_reader :isreverse
   attr_reader :entity_name
   
   def initialize(args)
     @command = args
-    @isreserve = false
+    @isreverse = false
     @property_name_type_hash = Hash.new
     @property_name_format_hash = Hash.new
     @property_name_json_hash = Hash.new
@@ -34,11 +34,13 @@ class CommandTask
         case flag
         when "r"
             @flags << flag
-            @isreserve = true
+            @isreverse = true
         when "l"
+          @flags << flag
           property_begin = true
           json_begin = false
         when "s"
+          @flags << flag
           json_begin = true
           property_begin = false
         end
@@ -70,7 +72,7 @@ class CommandTask
     index =0
     property_name_array.each do |name|
       if index >= json_name_array.length
-        @property_name_json_hash[name] = "<" +"#" + "json#{name}" + "#" + ">"
+        @property_name_json_hash[name] = nil
       else
         @property_name_json_hash[name] = json_name_array[index]
       end
@@ -81,11 +83,11 @@ class CommandTask
   
   
   def cacheCommand
-     command_content=@command.join
+     command_content=@command.join " "
      pwdPath=Dir.pwd
-     file=File.new("#{pwdPath}/command","w")
-     file << command_content +"\n"
-     file.chmod("a+x")
+     file=File.new("#{pwdPath}/command","a")
+     file << "ptgen " +command_content +"\n"
+     file.chmod(0777)
      file.close
   end
   

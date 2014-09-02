@@ -84,23 +84,33 @@ class ModelGenerator
     json_column_mappings_content=""
     json_columns=@commandTask.property_name_json_hash.values
     json_columns.each do |column|
-        json_column_mappings_content << "static const NSString * #{column.capitalize}JsonKey = @\"#{column}\";\n"
+        if(column)
+          json_column_mappings_content << "static const NSString * #{column.capitalize}JsonKey = @\"#{column}\";\n"
+        end
     end
     return json_column_mappings_content
   end
   
   def generate_property_mapping
+      hasJsonColumn=false
       long_space="           "
       property_mapping_content="@{\n"
       @commandTask.property_name_json_hash.each do |key , value|
-          property_mapping_content << "#{long_space} #{key}:#{value.capitalize}JsonKey,\n"
+          if value
+            hasJsonColumn=true
+            property_mapping_content << "#{long_space} #{key}:#{value.capitalize}JsonKey,\n"
+          end
       end
       
       property_mapping_content=property_mapping_content.chomp(",\n")
       property_mapping_content << "\n"
       property_mapping_content << "#{long_space}}"
-       
-      return property_mapping_content
+      
+      if hasJsonColumn
+        return property_mapping_content
+      else
+        return "nil"
+      end
   end
   
   def generate_formater
@@ -112,7 +122,7 @@ class ModelGenerator
           property_format=@commandTask.property_name_format_hash[key]
           
           formater_method_content= generate_formater_method_content(key,value,property_format,json_type,json_format)
-          if formater_method_content !=nil
+          if formater_method_content !=nil && json_column
             formater_content= "+(NSValueTransformer *) #{key}AtJSONTransformer {\n    #{formater_method_content}\n}"
           end
       end
