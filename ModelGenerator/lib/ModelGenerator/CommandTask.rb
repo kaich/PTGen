@@ -4,10 +4,13 @@ class CommandTask
   attr_reader :property_name_json_hash
   attr_reader :json_name_type_hash
   attr_reader :json_name_format_hash
+  attr_reader :property_name_db_hash
+  attr_reader :db_name_type_hash
   attr_reader :flags
   attr_reader :command
   attr_reader :isreverse
   attr_reader :entity_name
+  attr_reader :primary_key
   
   def initialize(args)
     @command = args
@@ -17,6 +20,8 @@ class CommandTask
     @property_name_json_hash = Hash.new
     @json_name_type_hash = Hash.new
     @json_name_format_hash = Hash.new
+    @property_name_db_hash = Hash.new
+    @db_name_type_hash = Hash.new
     @flags = Array.new
   end
   
@@ -25,9 +30,11 @@ class CommandTask
     self.cacheCommand
     property_begin =false
     json_begin =false
+    db_begin =false
     @entity_name=@command[0].capitalize+"Entity"
     property_name_array= Array.new
     json_name_array= Array.new
+    db_name_array= Array.new
     @command.each do |param|
       if param[0] == "-"
         flag=param[1]
@@ -36,15 +43,22 @@ class CommandTask
             @flags << flag
             @isreverse = true
         when "l"
-          @flags << flag
-          property_begin = true
-          json_begin = false
+            @flags << flag
+            property_begin = true
+            json_begin = false
+            db_begin =false
         when "s"
-          @flags << flag
-          json_begin = true
-          property_begin = false
+            @flags << flag
+            json_begin = true
+            property_begin = false
+            db_begin = false
+        when "d"
+            @flags << flag
+            db_begin = true
+            json_begin = false
+            property_begin = false
         end
-      elsif property_begin == true 
+      elsif property_begin == true
         property_info= param.split(":")
         name = ""
         type = ""
@@ -66,6 +80,20 @@ class CommandTask
         @json_name_type_hash[name] = type
         @json_name_format_hash[name] = format
         json_name_array << name
+      elsif db_begin == true
+        db_info= param.split(":")
+        name = ""
+        type = ""
+        if db_info.length >=1
+            name=json_info[0]
+            if name[0]=="*"
+               @primary_key=name.delete("*")
+               name = @primary_key
+            end
+        end
+        if db_info.length >=2 then type=json_info[1] end
+        @property_name_db_hash[name] = type
+        db_name_array << name
       end
     end
     
@@ -75,6 +103,12 @@ class CommandTask
         @property_name_json_hash[name] = nil
       else
         @property_name_json_hash[name] = json_name_array[index]
+      end
+      
+      if index >= db_name_array.length
+        @property_name_db_hash[name] = nil
+      else
+        @property_name_db_hash[name] = db_name_array[index]
       end
       index+=1
     end

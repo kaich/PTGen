@@ -5,13 +5,15 @@ class ModelGenerator
   autoload :CommonParam,           'ModelGenerator/CommonParam'
   autoload :FormatTransformer,     'ModelGenerator/FormatTransformer'
   autoload :CommandTask,           'ModelGenerator/CommandTask'
+  autoload :DBGenerator,           'ModelGenerator/DBGenerator'
+  autoload :AnnotationGenerator,   'ModelGenerator/AnnotationGenerator'
     
   attr_accessor :name
   attr_accessor :author
   attr_reader :project_name
   attr_reader :organization
   attr_reader :commandTask
-  
+  attr_reader :db_generator
   
   def initialize
     @organization="<" +"#" + "organization" + "#" + ">"
@@ -26,6 +28,8 @@ class ModelGenerator
   def analyze_command(args)
      @commandTask=CommandTask.new(args)
      @commandTask.parseCommand
+     
+     @db_generator=DBGenerator.new(@commandTask)
   end
   
   def generate_header
@@ -74,6 +78,10 @@ class ModelGenerator
     to_source_content.gsub!(CommonParam.property_mapping,self.generate_property_mapping)
     to_source_content.gsub!(CommonParam.json_column_mapping,self.generate_json_column_mapping)
     to_source_content.gsub!(CommonParam.type_transformer,self.generate_formater)
+    to_source_content.gsub!(CommonParam.table_column_declare,@db_generator.generate_table_column_declare)
+    to_source_content.gsub!(CommonParam.table_name,@db_generator.generate_table_name)
+    to_source_content.gsub!(CommonParam.table_primary_key,@db_generator.generate_primary_key)
+    to_source_content.gsub!(CommonParam.table_mapping,@db_generator.generate_table_mapping)
     
     f= File.new("#{Dir.pwd}/#{entity_name}.m","w")
     f.syswrite(to_source_content)
@@ -82,11 +90,15 @@ class ModelGenerator
   
   def generate_json_column_mapping
     json_column_mappings_content=""
-    json_columns=@commandTask.property_name_json_hash.values
-    json_columns.each do |column|
+    @commandTask.property_name_json_hash.keys.each do |name|
+        column=@commandTask.property_name_json_hash[name]
         if(column)
-          json_column_mappings_content << "static const NSString * #{column.capitalize}JsonKey = @\"#{column}\";\n"
+          json_column_mappings_content << "static const NSString * #{name.capitalize}JsonKey = @\"#{column}\";\n"
         end
+    end
+    if json_column_mappings_content.length > 0
+        annotation = AnnotationGenerator.generate_single_annotation("json column declare")
+        json_column_mappings_content = annotation + json_column_mappings_content
     end
     return json_column_mappings_content
   end
@@ -98,7 +110,7 @@ class ModelGenerator
       @commandTask.property_name_json_hash.each do |key , value|
           if value
             hasJsonColumn=true
-            property_mapping_content << "#{long_space} #{key}:#{value.capitalize}JsonKey,\n"
+            property_mapping_content << "#{long_space} #{key}:#{key.capitalize}JsonKey,\n"
           end
       end
       

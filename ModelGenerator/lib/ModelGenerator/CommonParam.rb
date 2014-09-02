@@ -23,6 +23,22 @@ class CommonParam
       return /\[TYPE_TRANSFORMER\]/
   end
   
+  def CommonParam.table_column_declare
+      return /\[TABLE_COLUMN_DECLARE\]/
+  end
+  
+  def CommonParam.table_name
+      return /\[TABLE_NAME\]/
+  end
+  
+  def CommonParam.table_primary_key
+      return /\[TABLE_PRIMARY_KEY\]/
+  end
+  
+  def CommonParam.table_mapping
+      return /\[TABLE_MAPPING\]/
+  end
+  
   def CommonParam.type_mapping
     return {"string" => "NSString *",
             "int" => "NSInteger",
