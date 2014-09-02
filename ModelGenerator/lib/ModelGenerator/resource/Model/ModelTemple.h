@@ -3,6 +3,6 @@
 #import <MTLModel.h>
 #import <MTLJSONAdapter.h>
 
-@interface [NAME] : MTLModel<MTLJSONSerializing>
+@interface [NAME]
 [PROPERTY_DECLARE]
 @end

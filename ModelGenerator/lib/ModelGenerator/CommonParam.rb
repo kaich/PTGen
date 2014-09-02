@@ -59,6 +59,7 @@ class CommonParam
             "indexpath" => "NSIndexPath *",
             "mindexpath" => "NSMutableIndexSet *",
             "bool" => "BOOL",
+            "enum" => "enum",
             "mapping" => "mapping",
             "custom" => "custom"}
   end

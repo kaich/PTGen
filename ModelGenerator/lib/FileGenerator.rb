@@ -1,6 +1,4 @@
 module FileGenerator
-    
-require_relative './ModelGenerator/ModelGenerator.rb'
 
     autoload :Announcement,           'ModelGenerator/Announcement'
     autoload :CommandTask,            'ModelGenerator/CommandTask'
