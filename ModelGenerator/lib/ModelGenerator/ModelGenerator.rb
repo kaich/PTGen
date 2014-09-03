@@ -43,6 +43,7 @@ class ModelGenerator
       headerPath="#{parent_path}/resource/Model/ModelTemple.h"
       
       annouce=Announcement.new
+      annouce.name=@commandTask.entity_name
       file_declare=annouce.createDeclare
       
       
@@ -70,6 +71,7 @@ class ModelGenerator
     to_source_content=File.read(source_path)
     
     annouce=Announcement.new
+    annouce.name=@commandTask.entity_name
     file_declare=annouce.createDeclare
     entity_name=@commandTask.entity_name
     

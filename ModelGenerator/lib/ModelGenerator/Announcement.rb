@@ -19,7 +19,7 @@ class Announcement
   end
   
   def createDeclare
-    return "//\n//  #{@name+".h\n"}//  #{@projectName}\n//\n//  Created by #{@author} on #{t=Time.now ; t.strftime("%y-%m-%d")}.\n\
+    return "//\n//  #{@name}.h\n//  #{@projectName}\n//\n//  Created by #{@author} on #{t=Time.now ; t.strftime("%y-%m-%d")}.\n\
 //  Copyright (c) #{t=Time.now ; t.strftime("%Y")}年 #{@author}. All rights reserved."
   end
 end
