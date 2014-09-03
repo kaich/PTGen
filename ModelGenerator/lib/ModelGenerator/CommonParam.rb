@@ -39,6 +39,10 @@ class CommonParam
       return /\[TABLE_MAPPING\]/
   end
   
+  def CommonParam.enum_declare
+      return /\[ENUM_DECLARE\]/
+  end
+  
   def CommonParam.type_mapping
     return {"string" => "NSString *",
             "int" => "NSInteger",
@@ -60,8 +64,8 @@ class CommonParam
             "mindexpath" => "NSMutableIndexSet *",
             "bool" => "BOOL",
             "enum" => "enum",
-            "mapping" => "mapping",
-            "custom" => "custom"}
+            "mapping" => "<#mapping#>",
+            "custom" => "<#custom#>"}
   end
   
   def CommonParam.reference_type_mapping
@@ -69,6 +73,7 @@ class CommonParam
               "int" => "assign",
               "float" => "assign",
               "double" => "assign",
+              "number" => "strong",
               "uint" => "assign",
               "date" => "strong",
               "data" => "strong",
@@ -81,6 +86,10 @@ class CommonParam
               "index" => "strong",
               "mindex" => "strong",
               "indexpath" => "strong",
-              "mindexpath" => "strong"}
+              "mindexpath" => "strong",
+              "bool" => "assign",
+              "enum" => "assign",
+              "mapping" => "strong",
+              "custom" => "<#refrence_type#>"}
   end
 end

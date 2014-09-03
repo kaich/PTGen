@@ -6,6 +6,7 @@ class ModelGenerator
   autoload :CommandTask,           'ModelGenerator/CommandTask'
   autoload :DBGenerator,           'ModelGenerator/DBGenerator'
   autoload :JsonGenerator,         'ModelGenerator/JsonGenerator'
+  autoload :EnumGenerator,         'ModelGenerator/EnumGenerator'
     
   attr_accessor :name
   attr_accessor :author
@@ -14,6 +15,7 @@ class ModelGenerator
   attr_reader :commandTask
   attr_reader :db_generator
   attr_reader :json_generator
+  attr_reader :enum_generator
   
   def initialize
     @organization="<" +"#" + "organization" + "#" + ">"
@@ -31,6 +33,9 @@ class ModelGenerator
      
      @db_generator=DBGenerator.new(@commandTask)
      @json_generator=JsonGenerator.new(@commandTask)
+     @enum_generator=EnumGenerator.new(@commandTask.property_em_name_type_hash)
+     
+     puts @commandTask.property_em_name_type_hash
   end
   
   def generate_header
@@ -44,6 +49,7 @@ class ModelGenerator
      
       to_header_content=File.read(headerPath)
       to_header_content.gsub!(CommonParam.file_declare,file_declare)
+      to_header_content.gsub!(CommonParam.enum_declare,@enum_generator.generate_em_declare)
       to_header_content.gsub!(CommonParam.entity_name,entity_name)
       to_header_content.gsub!(CommonParam.property_declare,self.generate_property_list)
       
@@ -86,7 +92,12 @@ class ModelGenerator
       @commandTask.property_name_type_hash.each do |name,type|
           var_type=type
           reference_type=CommonParam.reference_type_mapping[var_type];
-          property_type=CommonParam.type_mapping[var_type]
+          type_name= @commandTask.property_em_name_type_hash[name]
+          if type_name
+              property_type=@commandTask.property_em_name_type_hash[name]
+          else
+              property_type=CommonParam.type_mapping[var_type]
+          end
           property_name=name
           property_list_content << "@property(nonatomic,#{reference_type}) #{property_type} #{property_name};\n"
       end

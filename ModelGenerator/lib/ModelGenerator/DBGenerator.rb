@@ -8,6 +8,9 @@ class DBGenerator
 
   def initialize(command)
     @commandTask=command
+    if !@commandTask.primary_key
+       puts "you must set table primary key"
+    end
   end
   
   def generate_table_column_declare
@@ -33,7 +36,7 @@ class DBGenerator
     if @commandTask.flags.join.include?("d")
         annotation = AnnotationGenerator.generate_mark_annotation("DB method")
         has_super=@commandTask.parent_class
-        content =MethodGenerator.generate_method("+","NSString *","getTableName","return tb_#{@commandTask.command[0].downcase}",has_super)
+        content =MethodGenerator.generate_method("+","NSString *","getTableName","return tb_#{@commandTask.command[0].downcase};",has_super)
         return (annotation + content)
     end
     
@@ -58,7 +61,7 @@ class DBGenerator
          @commandTask.property_name_db_hash.each do |key , value|
              if value
                hasDBColumn=true
-               property_mapping_content << "#{long_space} #{key}:#{value.capitalize}TableKey,\n"
+               property_mapping_content << "#{long_space} #{key}:#{key.capitalize}TableKey,\n"
              end
          end
 

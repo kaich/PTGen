@@ -1,5 +1,6 @@
 class CommandTask
   attr_reader :property_name_type_hash
+  attr_reader :property_em_name_type_hash
   attr_reader :property_name_format_hash
   attr_reader :property_name_json_hash
   attr_reader :json_name_type_hash
@@ -16,6 +17,7 @@ class CommandTask
     @command = args
     @isreverse = false
     @property_name_type_hash = Hash.new
+    @property_em_name_type_hash = Hash.new
     @property_name_format_hash = Hash.new
     @property_name_json_hash = Hash.new
     @json_name_type_hash = Hash.new
@@ -69,11 +71,22 @@ class CommandTask
         property_info= param.split(":")
         name = ""
         type = ""
+        type_name = ""
         format = ""
         if property_info.length >=1 then name=property_info[0] end
-        if property_info.length >=2 then type=property_info[1] end
+        if property_info.length >=2 
+           type=property_info[1] 
+           if type.include?("enum")
+              type_info_array=type.split(".")
+              type=type_info_array[0]
+              type_name=type_info_array[1]
+           end
+        end
         if property_info.length >=3 then format=property_info[2] end
         @property_name_type_hash[name] = type
+        if type_name.length >0
+            @property_em_name_type_hash[name] = type_name
+        end
         @property_name_format_hash[name] = format
         property_name_array << name
       elsif json_begin == true
@@ -89,12 +102,6 @@ class CommandTask
         json_name_array << name
       elsif db_begin == true
         name = param
-        if name.length >=1
-            if name[0]=="*"
-               @primary_key=name.delete("*")
-               name = @primary_key
-            end
-        end
         db_name_array << name
       end
     end
@@ -110,7 +117,14 @@ class CommandTask
       if index >= db_name_array.length
         @property_name_db_hash[name] = nil
       else
-        @property_name_db_hash[name] = db_name_array[index]
+        db_name= db_name_array[index]
+        if db_name && db_name.length >=1
+            if db_name[0]=="*"
+               @primary_key=name
+               db_name = db_name.delete("*")
+            end
+        end
+        @property_name_db_hash[name] = db_name
       end
       index+=1
     end
