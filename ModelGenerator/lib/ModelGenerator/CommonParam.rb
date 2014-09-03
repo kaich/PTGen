@@ -43,6 +43,10 @@ class CommonParam
       return /\[ENUM_DECLARE\]/
   end
   
+  def CommonParam.header_import
+     return /\[HEADER_IMPORT\]/
+  end
+  
   def CommonParam.type_mapping
     return {"string" => "NSString *",
             "int" => "NSInteger",

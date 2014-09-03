@@ -13,11 +13,18 @@ module FileGenerator
     puts "error: Parameter does not match,there is not any parameter"
     return nil
     end
-
-    @model_generator=ModelGenerator.new
-    @model_generator.analyze_command(ARGV)
-    @model_generator.generate_header
-    @model_generator.generate_source
+    
+    begin
+      @model_generator=ModelGenerator.new
+      commandTask = @model_generator.analyze_command(ARGV)
+      @model_generator.generate_header
+      @model_generator.generate_source
+    rescue Exception => e
+      puts e
+    else  
+      commandTask.cacheCommand
+    end
+    
   end
   
 end

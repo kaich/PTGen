@@ -8,8 +8,8 @@ class DBGenerator
 
   def initialize(command)
     @commandTask=command
-    if !@commandTask.primary_key
-       puts "you must set table primary key"
+    if !@commandTask.primary_key && @commandTask.flags.join.include?("d")
+       raise "error : you must set table primary key"
     end
   end
   

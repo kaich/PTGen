@@ -28,7 +28,6 @@ class CommandTask
   
   
   def parseCommand
-    self.cacheCommand
     property_begin =false
     json_begin =false
     db_begin =false

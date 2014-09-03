@@ -35,7 +35,7 @@ class ModelGenerator
      @json_generator=JsonGenerator.new(@commandTask)
      @enum_generator=EnumGenerator.new(@commandTask.property_em_name_type_hash)
      
-     puts @commandTask.property_em_name_type_hash
+     return @commandTask
   end
   
   def generate_header
@@ -45,9 +45,14 @@ class ModelGenerator
       annouce=Announcement.new
       file_declare=annouce.createDeclare
       
+      
       entity_name=@commandTask.parent_class ?  (@commandTask.entity_name + " : " + @commandTask.parent_class) : (@commandTask.entity_name + ": MTLModel<MTLJSONSerializing>")
      
       to_header_content=File.read(headerPath)
+      if @commandTask.parent_class
+          header_import="#import \"#{@commandTask.entity_name}.h\"\n"
+          to_header_content.gsub!(CommonParam.header_import,header_import)
+      end
       to_header_content.gsub!(CommonParam.file_declare,file_declare)
       to_header_content.gsub!(CommonParam.enum_declare,@enum_generator.generate_em_declare)
       to_header_content.gsub!(CommonParam.entity_name,entity_name)
