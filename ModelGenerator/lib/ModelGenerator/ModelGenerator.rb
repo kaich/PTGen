@@ -78,14 +78,27 @@ class ModelGenerator
     
     to_source_content.gsub!(CommonParam.file_declare,file_declare)
     to_source_content.gsub!(CommonParam.entity_name,entity_name)
-    to_source_content.gsub!(CommonParam.property_mapping,@json_generator.generate_property_mapping)
-    to_source_content.gsub!(CommonParam.json_column_mapping,@json_generator.generate_json_column_mapping)
-    to_source_content.gsub!(CommonParam.type_transformer,@json_generator.generate_formater)
-    
-    to_source_content.gsub!(CommonParam.table_column_declare,@db_generator.generate_table_column_declare)
-    to_source_content.gsub!(CommonParam.table_name,@db_generator.generate_table_name)
-    to_source_content.gsub!(CommonParam.table_primary_key,@db_generator.generate_primary_key)
-    to_source_content.gsub!(CommonParam.table_mapping,@db_generator.generate_table_mapping)
+    if @json_generator.generate_property_mapping
+        to_source_content.gsub!(CommonParam.property_mapping,@json_generator.generate_property_mapping)
+    end
+    if @json_generator.generate_json_column_mapping
+        to_source_content.gsub!(CommonParam.json_column_mapping,@json_generator.generate_json_column_mapping)
+    end
+    if @json_generator.generate_formater
+        to_source_content.gsub!(CommonParam.type_transformer,@json_generator.generate_formater)
+    end
+    if @db_generator.generate_table_column_declare
+        to_source_content.gsub!(CommonParam.table_column_declare,@db_generator.generate_table_column_declare)
+    end
+    if @db_generator.generate_table_name
+        to_source_content.gsub!(CommonParam.table_name,@db_generator.generate_table_name)
+    end
+    if @db_generator.generate_primary_key
+        to_source_content.gsub!(CommonParam.table_primary_key,@db_generator.generate_primary_key)
+    end
+    if @db_generator.generate_table_mapping
+        to_source_content.gsub!(CommonParam.table_mapping,@db_generator.generate_table_mapping)
+    end
    
     
     f= File.new("#{Dir.pwd}/#{entity_name}.m","w")

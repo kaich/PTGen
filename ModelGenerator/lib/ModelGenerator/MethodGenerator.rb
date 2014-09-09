@@ -1,5 +1,15 @@
 class MethodGenerator
-  def self.generate_method(method_type,return_type,methond_name,method_content,has_custom_super_class)
+  autoload :Detector,          'ModelGenerator/Detector'
+  
+  attr_reader :detector
+  
+  def initialize(command)
+     file_path="#{Dir.pwd}/#{command.entity_name}.m"
+     @detector=Detector.new(file_path)
+     @detector.detect_method
+  end
+  
+  def generate_method(method_type,return_type,methond_name,method_content,has_custom_super_class)
      if return_type.downcase.include?("dictionary") && has_custom_super_class
         current_content= method_content.gsub(/return/,"NSDictionary *subDictionary=")
         method_content =%Q/NSMutableDictionary * content=[[super #{methond_name}] mutableCopy];
@@ -17,6 +27,11 @@ class MethodGenerator
                         /
 
      end
-     return "#{method_type}(#{return_type})#{methond_name}\n{\n\t#{method_content}\n}\n"
+     method_implement =  "#{method_type}(#{return_type})#{methond_name}\n{\n\t#{method_content}\n}\n"
+     
+     result= @detector.method_implment_same?(method_implement)
+     
+     return result ? result : method_implement
+     
   end
 end

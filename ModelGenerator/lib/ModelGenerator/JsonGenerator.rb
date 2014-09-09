@@ -6,9 +6,11 @@ class JsonGenerator
   autoload :MethodGenerator,       'ModelGenerator/MethodGenerator'
   
   attr_reader :commandTask
+  attr_reader :method_generator
 
   def initialize(command)
     @commandTask=command
+    @method_generator=MethodGenerator.new(command)
   end
   
   def generate_json_column_mapping
@@ -43,7 +45,7 @@ class JsonGenerator
 
        if hasJsonColumn
          has_super=@commandTask.parent_class
-         content =MethodGenerator.generate_method("+","NSDictionary *","JSONKeyPathsByPropertyKey","#{property_mapping_content}",has_super)
+         content =@method_generator.generate_method("+","NSDictionary *","JSONKeyPathsByPropertyKey","#{property_mapping_content}",has_super)
          annotation = AnnotationGenerator.generate_mark_annotation("json method")
          content = annotation + content
          return content
@@ -63,7 +65,7 @@ class JsonGenerator
            formater_method_content= generate_formater_method_content(key,value,property_format,json_type,json_format)
            if formater_method_content !=nil && json_column
              has_super=@commandTask.parent_class
-             formater_content=MethodGenerator.generate_method("+","NSValueTransformer *" , "#{key}AtJSONTransformer","#{formater_method_content}",has_super)
+             formater_content=@method_generator.generate_method("+","NSValueTransformer *" , "#{key}AtJSONTransformer","#{formater_method_content}",has_super)
            end
        end
 

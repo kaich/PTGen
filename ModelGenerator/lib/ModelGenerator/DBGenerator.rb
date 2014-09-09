@@ -8,6 +8,7 @@ class DBGenerator
 
   def initialize(command)
     @commandTask=command
+    @method_generator=MethodGenerator.new(command)
     if !@commandTask.primary_key && @commandTask.flags.join.include?("d")
        raise "error : you must set table primary key"
     end
@@ -36,7 +37,7 @@ class DBGenerator
     if @commandTask.flags.join.include?("d")
         annotation = AnnotationGenerator.generate_mark_annotation("DB method")
         has_super=@commandTask.parent_class
-        content =MethodGenerator.generate_method("+","NSString *","getTableName","return tb_#{@commandTask.command[0].downcase};",has_super)
+        content =@method_generator.generate_method("+","NSString *","getTableName","return tb_#{@commandTask.command[0].downcase};",has_super)
         return (annotation + content)
     end
     
@@ -46,7 +47,7 @@ class DBGenerator
   def generate_primary_key
     if @commandTask.flags.join.include?("d")
         has_super=@commandTask.parent_class
-        content =MethodGenerator.generate_method("+","NSString *","getPrimaryKey","return #{@commandTask.primary_key.capitalize}TableKey;",has_super)
+        content =@method_generator.generate_method("+","NSString *","getPrimaryKey","return #{@commandTask.primary_key.capitalize}TableKey;",has_super)
         return content
     end
     return ""
@@ -71,7 +72,7 @@ class DBGenerator
 
          if hasDBColumn
            has_super=@commandTask.parent_class
-           content =MethodGenerator.generate_method("+","NSDictionary *","getTableMapping",property_mapping_content,has_super)
+           content =@method_generator.generate_method("+","NSDictionary *","getTableMapping",property_mapping_content,has_super)
            return content
          else
            return ""
