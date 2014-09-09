@@ -2,8 +2,10 @@ class MethodGenerator
   autoload :Detector,          'ModelGenerator/Detector'
   
   attr_reader :detector
+  attr_reader :commandTask
   
   def initialize(command)
+     @commandTask = command
      file_path="#{Dir.pwd}/#{command.entity_name}.m"
      @detector=Detector.new(file_path)
      @detector.detect_method
@@ -29,9 +31,13 @@ class MethodGenerator
      end
      method_implement =  "#{method_type}(#{return_type})#{methond_name}\n{\n\t#{method_content}\n}\n"
      
-     result= @detector.method_implment_same?(method_implement)
      
-     return result ? result : method_implement
+     if !@commandTask.is_force_reset
+       result= @detector.method_implment_same?(method_implement)
+       return result ? result : method_implement
+     end
+     
+     return method_implement
      
   end
 end

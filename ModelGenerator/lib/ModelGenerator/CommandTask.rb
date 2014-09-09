@@ -9,6 +9,7 @@ class CommandTask
   attr_reader :flags
   attr_reader :command
   attr_reader :isreverse
+  attr_reader :is_force_reset
   attr_reader :entity_name
   attr_reader :primary_key
   attr_reader :parent_class
@@ -16,6 +17,7 @@ class CommandTask
   def initialize(args)
     @command = args
     @isreverse = false
+    @is_force_reset =false
     @property_name_type_hash = Hash.new
     @property_em_name_type_hash = Hash.new
     @property_name_format_hash = Hash.new
@@ -63,6 +65,12 @@ class CommandTask
         when "d"
             @flags << flag
             db_begin = true
+            json_begin = false
+            property_begin = false
+        when "f"
+            @flags << flag
+            @is_force_reset=true
+            db_begin = false
             json_begin = false
             property_begin = false
         end
