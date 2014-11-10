@@ -1,4 +1,6 @@
 class CommandTask
+  
+    
   attr_reader :property_name_type_hash
   attr_reader :property_em_name_type_hash
   attr_reader :property_name_format_hash
@@ -82,6 +84,13 @@ class CommandTask
             db_begin = false
             json_begin = false
             property_begin = false
+        when "h"
+            @flags << flag
+            @is_force_reset=false
+            db_begin = false
+            json_begin = false
+            property_begin = false
+            
         end
       elsif property_begin == true
         property_info= param.split(":")

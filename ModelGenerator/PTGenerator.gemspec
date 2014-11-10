@@ -10,4 +10,6 @@ Gem::Specification.new do |s|
   s.executables   = %w{ ptgen }
   s.require_paths = %w{ lib }
   s.homepage    ='http://rubygems.org/gems/PTGenerator'  
+  s.has_rdoc=false
+  s.extra_rdoc_files=["README"]
 end

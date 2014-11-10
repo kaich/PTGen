@@ -6,6 +6,7 @@ module FileGenerator
     autoload :FormatTransformer,      'ModelGenerator/FormatTransformer'
     autoload :ModelGenerator,         'ModelGenerator/ModelGenerator'
     autoload :HooksManager,           'ModelGenerator/Project'
+    autoload :Helper,       'ModelGenerator/Helper'
 
 
   def self.generate_model
@@ -17,8 +18,13 @@ module FileGenerator
     begin
       @model_generator=ModelGenerator.new
       commandTask = @model_generator.analyze_command(ARGV)
-      @model_generator.generate_header
-      @model_generator.generate_source
+      if commandTask.flags.join.include?("h")
+          puts Helper.help
+      else
+          @model_generator.generate_header
+          @model_generator.generate_source
+      end
+
     rescue Exception => e
       puts e
     else  

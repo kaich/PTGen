@@ -2,4 +2,12 @@
 
 You should document your project here.
 
+# ptgen is a tools for model. It works on mac. If you use mantle for your entity. you can use it.
+# I create it for my project. The model can contain [database] [request] [nimbus] option method.
+# There is not prefect now .
+# when you create your model, you maybe contain manay property to create. and some for request 
+# others for database . You must make your database and request column correspond to property index.
+# I will fix it latter. 
+# I will make it more prefect
+
 
