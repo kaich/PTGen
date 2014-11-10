@@ -47,6 +47,10 @@ class CommonParam
      return /\[HEADER_IMPORT\]/
   end
   
+  def CommonParam.nimbus_method
+      return /\[NIMBUS_METHOD\]/
+  end
+  
   def CommonParam.type_mapping
     return {"string" => "NSString *",
             "int" => "NSInteger",

@@ -26,7 +26,7 @@ class Detector
       @methods_name_implment_hash[method_name] = method_implment
       
     end
-    puts 
+    puts
     puts @methods_name_implment_hash
   end
   

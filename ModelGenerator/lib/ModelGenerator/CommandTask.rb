@@ -31,6 +31,7 @@ class CommandTask
     property_begin =false
     json_begin =false
     db_begin =false
+
     if @command[0].include?(":")
       class_info=@command[0].delete(" ")
       entity_info_array=class_info.split(":")
@@ -50,6 +51,9 @@ class CommandTask
         when "r"
             @flags << flag
             @isreverse = true
+            property_begin= false
+            json_begin = false
+            db_begin = false
         when "l"
             @flags << flag
             property_begin = true
@@ -65,6 +69,11 @@ class CommandTask
             db_begin = true
             json_begin = false
             property_begin = false
+        when "n"
+            @flags << flag
+            property_begin= false
+            json_begin = false
+            db_begin = false
         end
       elsif property_begin == true
         property_info= param.split(":")

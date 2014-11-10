@@ -7,6 +7,7 @@ class ModelGenerator
   autoload :DBGenerator,           'ModelGenerator/DBGenerator'
   autoload :JsonGenerator,         'ModelGenerator/JsonGenerator'
   autoload :EnumGenerator,         'ModelGenerator/EnumGenerator'
+  autoload :NimbusGenerator,       'ModelGenerator/NimbusGenerator'
     
   attr_accessor :name
   attr_accessor :author
@@ -16,6 +17,7 @@ class ModelGenerator
   attr_reader :db_generator
   attr_reader :json_generator
   attr_reader :enum_generator
+  attr_reader :nimbus_generator
   
   def initialize
     @organization="<" +"#" + "organization" + "#" + ">"
@@ -34,6 +36,7 @@ class ModelGenerator
      @db_generator=DBGenerator.new(@commandTask)
      @json_generator=JsonGenerator.new(@commandTask)
      @enum_generator=EnumGenerator.new(@commandTask.property_em_name_type_hash)
+     @nimbus_generator=NimbusGenerator.new(@commandTask)
      
      return @commandTask
   end
@@ -99,7 +102,10 @@ class ModelGenerator
     if @db_generator.generate_table_mapping
         to_source_content.gsub!(CommonParam.table_mapping,@db_generator.generate_table_mapping)
     end
-   
+    if @nimbus_generator.generate_need_methods
+        to_source_content.gsub!(CommonParam.nimbus_method,@nimbus_generator.generate_need_methods)
+    end
+    
     
     f= File.new("#{Dir.pwd}/#{entity_name}.m","w")
     f.syswrite(to_source_content)
