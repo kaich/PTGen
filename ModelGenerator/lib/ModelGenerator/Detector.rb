@@ -19,15 +19,14 @@ class Detector
   def detect_method
     if !@content then return end 
       
-    method_regular=/^[+-].*\(.*\)[\s\S]*?(\w*)[\s\S]*\n}/
+    method_regular=/^[+-].*\(.*\)[\s\S]*?(\w*)[\s\S]*?\n}/
     @content.gsub(method_regular).each do |method_implment|
       @methods_implement_hash[method_implment]= true
       method_name= $1
       @methods_name_implment_hash[method_name] = method_implment
       
     end
-    puts
-    puts @methods_name_implment_hash
+
   end
   
   
@@ -43,8 +42,8 @@ class Detector
   
   #if same return false , else return file method implement
   def method_implment_same? (method_implement)
-    
     if !methods_implement_hash then return end
+    
     method_name=self.get_method_name(method_implement)
     file_method_implement= @methods_name_implment_hash[method_name]
     if file_method_implement
@@ -59,16 +58,3 @@ class Detector
   end
   
 end
-
-
-a =%q/+(NSValueTransformer *)nameAtJSONTransformer
-{
-	return [MTLValueTransformer reversibleTransformerWithForwardBlock:^( x) {
-                                 return 
-                               } reverseBlock:^(NSString * x) {
-                                 return 
-                               }];
-}/
-d=Detector.new "/Users/mac/Desktop/PTFILE_TEST/StudentEntity.m"
-d.detect_method
-puts d.method_implment_same?(a)
