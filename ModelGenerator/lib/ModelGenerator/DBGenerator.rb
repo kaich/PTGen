@@ -62,7 +62,7 @@ class DBGenerator
          @commandTask.property_name_db_hash.each do |key , value|
              if value
                hasDBColumn=true
-               property_mapping_content << "#{long_space} #{key}:#{key.capitalize}TableKey,\n"
+               property_mapping_content << "#{long_space} @\"#{key}\":#{key.capitalize}TableKey,\n"
              end
          end
 

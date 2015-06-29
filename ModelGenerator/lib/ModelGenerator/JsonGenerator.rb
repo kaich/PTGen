@@ -35,7 +35,7 @@ class JsonGenerator
        @commandTask.property_name_json_hash.each do |key , value|
            if value
              hasJsonColumn=true
-             property_mapping_content << "#{long_space} #{key}:#{key.capitalize}JsonKey,\n"
+             property_mapping_content << "#{long_space} @\"#{key}\":#{key.capitalize}JsonKey,\n"
            end
        end
 

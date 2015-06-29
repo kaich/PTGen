@@ -90,44 +90,63 @@ class CommandTask
             db_begin = false
             json_begin = false
             property_begin = false
-            
+        when "a"
+            param.each_char do |chr|  
+               if chr == 'l'
+                  @flags << chr
+                  property_begin = true
+               elsif chr == 's'
+                  @flags << chr
+                  json_begin = true
+               elsif chr == 'd'
+                  @flags << chr
+                  db_begin = true
+               end
+            end
         end
-      elsif property_begin == true
-        property_info= param.split(":")
-        name = ""
-        type = ""
-        type_name = ""
-        format = ""
-        if property_info.length >=1 then name=property_info[0] end
-        if property_info.length >=2 
-           type=property_info[1] 
-           if type.include?("enum")
-              type_info_array=type.split(".")
-              type=type_info_array[0]
-              type_name=type_info_array[1]
-           end
+      else
+
+        if property_begin == true
+          property_info= param.split(":")
+          name = ""
+          type = ""
+          type_name = ""
+          format = ""
+          if property_info.length >=1 then name=property_info[0].delete("*") end
+          if property_info.length >=2 
+             type=property_info[1] 
+             if type.include?("enum")
+                type_info_array=type.split(".")
+                type=type_info_array[0]
+                type_name=type_info_array[1]
+             end
+          end
+          if property_info.length >=3 then format=property_info[2] end
+          @property_name_type_hash[name] = type
+          if type_name.length >0
+              @property_em_name_type_hash[name] = type_name
+          end
+          @property_name_format_hash[name] = format
+          property_name_array << name
         end
-        if property_info.length >=3 then format=property_info[2] end
-        @property_name_type_hash[name] = type
-        if type_name.length >0
-            @property_em_name_type_hash[name] = type_name
+
+        if json_begin == true
+          json_info= param.split(":")
+          name = ""
+          type = ""
+          format = ""
+          if json_info.length >=1 then name=json_info[0].delete("*") end
+          if json_info.length >=2 then type=json_info[1] end
+          if json_info.length >=3 then format=json_info[2] end
+          @json_name_type_hash[name] = type
+          @json_name_format_hash[name] = format
+          json_name_array << name
         end
-        @property_name_format_hash[name] = format
-        property_name_array << name
-      elsif json_begin == true
-        json_info= param.split(":")
-        name = ""
-        type = ""
-        format = ""
-        if json_info.length >=1 then name=json_info[0] end
-        if json_info.length >=2 then type=json_info[1] end
-        if json_info.length >=3 then format=json_info[2] end
-        @json_name_type_hash[name] = type
-        @json_name_format_hash[name] = format
-        json_name_array << name
-      elsif db_begin == true
-        name = param
-        db_name_array << name
+
+        if db_begin == true
+          name = param.split(":")
+          db_name_array << name[0]
+        end
       end
     end
     

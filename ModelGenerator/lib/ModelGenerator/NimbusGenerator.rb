@@ -18,6 +18,7 @@ class NimbusGenerator
 	 	if !self.generate_cell_class_method.empty?  || !self.generate_cell_style_method.empty?
 	 		content << AnnotationGenerator.generate_mark_annotation("Nimbus method")
 		 	content << self.generate_cell_class_method
+            content << "\n"
 		 	content << self.generate_cell_style_method
 	 	end
 
