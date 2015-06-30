@@ -16,6 +16,10 @@ class Helper
 # -d   database. it's table column name 
 # -f   force. force to overide modified method 
 # -r   not used now.
+# -a[lsd]  generate same name 
+# -u[lsd]  generate model according http response
+#    -m  class mapping ,eg: 'data/student:student' , 'data/student' is path. last student is class name.
+#    -k  primary key for database ,if -u contain d, you can use it ,otherwise it default the first property
 # -h   help
 # if your entity is subclass to other class, you can append :[superClassName] behind
 # [entityName]
@@ -35,7 +39,7 @@ class Helper
 # example:
 # 'ptgen -ulsd http://www.i4.cn/ajax.php?a=getoldnewsforpage@itype=2@n=20 -m /:Student'
 #  it will generate model property according response of request , property name is same with server name . only support get request for json now
-#
+#  note : please replace & with @ in url string 
 # 'ptgen -alsd *name:string'
 #
 # type :
