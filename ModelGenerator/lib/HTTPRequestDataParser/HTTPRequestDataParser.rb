@@ -40,7 +40,7 @@ require 'json'
 	    	    json_object = json_object[0]
 	    	    json_object = get_hash_from_array(json_object)
 	    	 else
-                return json_object
+            return json_object
 	    	 end
 	    else
 	    	return json_object
@@ -73,6 +73,7 @@ require 'json'
                 param = @primary_key == key || (@primary_key.empty? && index==0) ? "*" : ""
                 param += "#{key}:#{type_mapping value}"
                 command_line = command_line + " " + param
+                index+=1
             end
             
             foo_argv = command_line.split " "

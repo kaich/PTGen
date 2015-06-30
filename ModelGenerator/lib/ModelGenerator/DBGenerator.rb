@@ -20,7 +20,7 @@ class DBGenerator
       @commandTask.property_name_db_hash.keys.each do |name|
           column=@commandTask.property_name_db_hash[name]
           if(column)
-            db_column_mappings_content << "static const NSString * #{name.capitalize}TableKey = @\"#{column}\";\n"
+            db_column_mappings_content << "static NSString * #{name.capitalize}TableKey = @\"#{column}\";\n"
           end
       end
       if db_column_mappings_content.length > 0
@@ -37,7 +37,7 @@ class DBGenerator
     if @commandTask.flags.join.include?("d")
         annotation = AnnotationGenerator.generate_mark_annotation("DB method")
         has_super=@commandTask.parent_class
-        content =@method_generator.generate_method("+","NSString *","getTableName","return tb_#{@commandTask.command[0].downcase};",has_super)
+        content =@method_generator.generate_method("+","NSString *","getTableName","return @\"tb_#{@commandTask.command[0].downcase}\";",has_super)
         return (annotation + content)
     end
     
@@ -68,7 +68,7 @@ class DBGenerator
 
          property_mapping_content=property_mapping_content.chomp(",\n")
          property_mapping_content << "\n"
-         property_mapping_content << "#{long_space}}"
+         property_mapping_content << "#{long_space}};"
 
          if hasDBColumn
            has_super=@commandTask.parent_class

@@ -18,7 +18,7 @@ class JsonGenerator
      @commandTask.property_name_json_hash.keys.each do |name|
          column=@commandTask.property_name_json_hash[name]
          if(column)
-           json_column_mappings_content << "static const NSString * #{name.capitalize}JsonKey = @\"#{column}\";\n"
+           json_column_mappings_content << "static NSString * #{name.capitalize}JsonKey = @\"#{column}\";\n"
          end
      end
      if json_column_mappings_content.length > 0
