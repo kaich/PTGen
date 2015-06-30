@@ -9,12 +9,18 @@ require 'json'
    attr_accessor :primary_key
 
  	def type_mapping(parse_object)
- 		if  parse_object.kind_of? Numeric
- 			return  "number"
- 	    elsif parse_object.kind_of? String
+ 		if  parse_object.kind_of? Fixnum
+ 			return  "int"
+    elsif parse_object.kind_of? Float
+      return "float"
+    elsif parse_object.kind_of? String
  	    	return "string"
- 	    elsif parse_object.kind_of? Array
- 			return "array"
+    elsif parse_object.kind_of? Array
+ 			  return "array"
+    elsif parse_object.kind_of? FalseClass
+        return "bool"
+    elsif parse_object.kind_of? TrueClass
+        return "bool"
  		end
  	end
  	
@@ -54,7 +60,7 @@ require 'json'
             
             final_object = json_object 
             path_components.each do |compoment|
-               compoment_value = json_object[compoment]
+               compoment_value = final_object[compoment]
                if compoment_value == nil || compoment_value.length ==0
                    puts "Make sure your http response is JSON and your JSON content path is correct"
                else
