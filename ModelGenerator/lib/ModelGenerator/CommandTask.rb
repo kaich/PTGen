@@ -113,6 +113,7 @@ class CommandTask
           type_name = ""
           format = ""
           if property_info.length >=1 then name=property_info[0].delete("*") end
+          name = "entityId" if name == 'id'
           if property_info.length >=2 
              type=property_info[1] 
              if type.include?("enum")
@@ -136,6 +137,7 @@ class CommandTask
           type = ""
           format = ""
           if json_info.length >=1 then name=json_info[0].delete("*") end
+          name = "entityId" if name == 'id'
           if json_info.length >=2 then type=json_info[1] end
           if json_info.length >=3 then format=json_info[2] end
           @json_name_type_hash[name] = type

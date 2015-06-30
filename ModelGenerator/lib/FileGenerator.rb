@@ -7,6 +7,7 @@ module FileGenerator
     autoload :ModelGenerator,         'ModelGenerator/ModelGenerator'
     autoload :HooksManager,           'ModelGenerator/Project'
     autoload :Helper,       'ModelGenerator/Helper'
+    autoload :HTTPCommandParser, 'HTTPRequestDataParser/HTTPCommandParser'
 
 
   def self.generate_model
@@ -20,7 +21,13 @@ module FileGenerator
       commandTask = @model_generator.analyze_command(ARGV)
       if commandTask.flags.join.include?("h")
           puts Helper.help
-      else
+          return nil
+      end
+
+      commandParse = HTTPCommandParser.new(ARGV)
+      is_ok =commandParse.parseCommand
+
+      if is_ok == false
           @model_generator.generate_header
           @model_generator.generate_source
       end

@@ -57,7 +57,7 @@ class CommonParam
             "uint" => "NSUInteger",
             "float" => "float",
             "double" => "double",
-            "number" => "NSNumber",
+            "number" => "NSNumber *",
             "date" => "NSDate *",
             "data" => "NSData *",
             "time" => "NSTimeInterval",

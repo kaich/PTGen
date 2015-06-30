@@ -20,13 +20,23 @@ class Helper
 # if your entity is subclass to other class, you can append :[superClassName] behind
 # [entityName]
 # example: 
-# create student -l name:string -s sname:string  -d *tname  #* is primary key.
+# ptgen student -l name:string -s sname:string  -d *tname  #* is primary key.
 #
-# creawte student:person -l name:string -s sname:string -d *tname
+# ptgen student:person -l name:string -s sname:string -d *tname
 #
 # it created Student.h and Student.m file in current path.
 # property is name. and database method and json transformer method
 # created
+#
+# version 2.0.0  new feture  :
+# 1. add -alsd param , [lsd] is option. it create model file conveniently with  name property , server and db column same 
+# 2. add Http get request to generate model file 
+# 
+# example:
+# 'ptgen -ulsd http://www.i4.cn/ajax.php?a=getoldnewsforpage@itype=2@n=20 -m /:Student'
+#  it will generate model property according response of request , property name is same with server name . only support get request for json now
+#
+# 'ptgen -alsd *name:string'
 #
 # type :
 # "string" => "NSString *"
@@ -34,7 +44,7 @@ class Helper
 # "uint" => "NSUInteger"
 # "float" => "float"
 # "double" => "double"
-# "number" => "NSNumber"
+# "number" => "NSNumber *"
 # "date" => "NSDate *"
 # "data" => "NSData *"
 # "time" => "NSTimeInterval"
