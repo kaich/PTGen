@@ -21,7 +21,11 @@ require 'json'
         return "bool"
     elsif parse_object.kind_of? TrueClass
         return "bool"
+    elsif  parse_object.kind_of? Hash
+        return "custom"
  		end
+
+    return nil
  	end
  	
  	def fetch(urlString,class_mapping)
@@ -53,7 +57,7 @@ require 'json'
       
       model_generator=ModelGenerator.new
 	    class_mapping.each_pair do |key , value|
-
+        
 	    	command_line = value
         command_line = command_line + " "  + @flags  if @flags
 	    	path_components = key.split "/"
