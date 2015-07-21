@@ -19,8 +19,9 @@ class DBGenerator
       db_column_mappings_content=""
       @commandTask.property_name_db_hash.keys.each do |name|
           column=@commandTask.property_name_db_hash[name]
+          name = name.slice(0,1).capitalize + name.slice(1..-1)
           if(column)
-            db_column_mappings_content << "static NSString * #{name.capitalize}TableKey = @\"#{column}\";\n"
+            db_column_mappings_content << "static NSString * #{name}TableKey = @\"#{column}\";\n"
           end
       end
       if db_column_mappings_content.length > 0
@@ -47,7 +48,8 @@ class DBGenerator
   def generate_primary_key
     if @commandTask.flags.join.include?("d")
         has_super=@commandTask.parent_class
-        content =@method_generator.generate_method("+","NSString *","getPrimaryKey","return #{@commandTask.primary_key.capitalize}TableKey;",has_super)
+        primary_key = @commandTask.primary_key.slice(0,1).capitalize + @commandTask.primary_key.slice(1..-1)
+        content =@method_generator.generate_method("+","NSString *","getPrimaryKey","return #{primary_key}TableKey;",has_super)
         return content
     end
     return ""
@@ -62,7 +64,8 @@ class DBGenerator
          @commandTask.property_name_db_hash.each do |key , value|
              if value
                hasDBColumn=true
-               property_mapping_content << "#{long_space} @\"#{key}\":#{key.capitalize}TableKey,\n"
+               cap_key = key.slice(0,1).capitalize + key.slice(1..-1)
+               property_mapping_content << "#{long_space} @\"#{key}\":#{cap_key}TableKey,\n"
              end
          end
 

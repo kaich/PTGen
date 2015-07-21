@@ -41,6 +41,7 @@ class Detector
   end
   
   #if same return false , else return file method implement
+  #the meanning of this method is not very suitable
   def method_implment_same? (method_implement)
     if !methods_implement_hash then return end
     
