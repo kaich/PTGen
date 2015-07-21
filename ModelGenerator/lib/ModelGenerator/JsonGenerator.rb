@@ -18,7 +18,8 @@ class JsonGenerator
      @commandTask.property_name_json_hash.keys.each do |name|
          column=@commandTask.property_name_json_hash[name]
          if(column)
-           json_column_mappings_content << "static NSString * #{name.capitalize}JsonKey = @\"#{column}\";\n"
+           cap_name = name.slice(0,1).capitalize + name.slice(1..-1)
+           json_column_mappings_content << "static NSString * #{cap_name}JsonKey = @\"#{column}\";\n"
          end
      end
      if json_column_mappings_content.length > 0
@@ -35,7 +36,8 @@ class JsonGenerator
        @commandTask.property_name_json_hash.each do |key , value|
            if value
              hasJsonColumn=true
-             property_mapping_content << "#{long_space} @\"#{key}\":#{key.capitalize}JsonKey,\n"
+             cap_key = key.slice(0,1).capitalize + key.slice(1..-1)
+             property_mapping_content << "#{long_space} @\"#{key}\":#{cap_key}JsonKey,\n"
            end
        end
 
@@ -65,7 +67,7 @@ class JsonGenerator
            formater_method_content= generate_formater_method_content(key,value,property_format,json_type,json_format)
            if formater_method_content !=nil && json_column
              has_super=@commandTask.parent_class
-             formater_content=@method_generator.generate_method("+","NSValueTransformer *" , "#{key}AtJSONTransformer","#{formater_method_content}",has_super)
+             formater_content << @method_generator.generate_method("+","NSValueTransformer *" , "#{key}AtJSONTransformer","#{formater_method_content}",has_super)
            end
        end
 
