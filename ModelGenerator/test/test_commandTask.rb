@@ -3,7 +3,7 @@ require 'ModelGenerator/CommandTask.rb'
 
 class CommandTaskTest < MiniTest::Test
    def setup
-     @task = CommandTask.new(["student", "-l" , "name:string",'-s','sname:string' ,'-d','*tname'])
+     @task = CommandTask.new(["student", "-l" , "name:string:%@d",'-s','sname:string' ,'-d','*tname'])
      @task.parseCommand
    end 
 
@@ -19,7 +19,7 @@ class CommandTaskTest < MiniTest::Test
    def test_property_and_json
      assert_equal @task.property_name_type_hash , {"name" => "string"}
      assert_equal @task.property_em_name_type_hash  , {} 
-     assert_equal @task.property_name_format_hash , {"name"=>""} 
+     assert_equal @task.property_name_format_hash , {"name"=>"%@d"} 
      assert_equal @task.property_name_json_hash , {"name" => "sname"}
 
      assert_equal @task.json_name_type_hash, {"sname" => "string"}
@@ -37,7 +37,7 @@ class CommandTaskTest < MiniTest::Test
    end
 
    def test_command
-     assert_equal ["student", "-l" , "name:string",'-s','sname:string' ,'-d','*tname'] , @task.command
+     assert_equal ["student", "-l" , "name:string:%@d",'-s','sname:string' ,'-d','*tname'] , @task.command
    end
 
    def test_isreverse_false
