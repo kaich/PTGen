@@ -16,4 +16,9 @@ class HTTPCommandParserTest < MiniTest::Test
     assert_equal 'id', @parser.primary_key
   end
 
+  def teardown
+    File.delete  "ListEntity.h"
+    File.delete  "ListEntity.m"
+  end
+
 end
