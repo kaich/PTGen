@@ -1,7 +1,7 @@
 class Helper
 	
 	def self.help
-		content=%Q/
+		content=%q{
 # ptgen is a tools for model. It works on mac. If you use mantle for your entity. you can use it.
 # I create it for my project. The model can contain [database] [request] [nimbus] option method.
 # There is not prefect now .
@@ -37,7 +37,7 @@ class Helper
 # 2. add Http get request to generate model file 
 # 
 # example:
-# 'ptgen -ulsd http://www.i4.cn/ajax.php?a=getoldnewsforpage@itype=2@n=20 -m /:Student'
+# 'ptgen -ulsd "http://www.i4.cn/ajax.php?a=getoldnewsforpage&itype=2&n=20" -m /:Student'
 #  it will generate model property according response of request , property name is same with server name . only support get request for json now
 #  note : please replace & with @ in url string 
 # 'ptgen -alsd *name:string'
@@ -65,7 +65,7 @@ class Helper
 # "enum" => "enum",
 # "mapping"
 # "custom"
-				/
+    }	
 	end
 
 end

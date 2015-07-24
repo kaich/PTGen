@@ -1,12 +1,14 @@
 class HTTPCommandParser
 
     autoload :HTTPRequestDataParser,          'HTTPRequestDataParser/HTTPRequestDataParser'
+     
+    attr_accessor :path_class_mapping , :url_str , :params, :primary_key
   
   def initialize(args)
     @command = args
     @path_class_mapping  = Hash.new
     @url_str = ""
-    @prams = ""
+    @params = ""
     @primary_key = ""
   end
   
@@ -23,7 +25,7 @@ class HTTPCommandParser
         when "u"
              url_begin = true
              path_class_mapping_begin = false
-             @prams = param.gsub '-u' , '-a'
+             @params = param.gsub '-u' , '-a'
         when "m"
              path_class_mapping_begin = true
              url_begin = false
@@ -34,7 +36,7 @@ class HTTPCommandParser
         end
       else 
         if url_begin
-          @url_str = param.gsub "@" , "&"
+          @url_str = param.delete "\""
         elsif path_class_mapping_begin
            components = param.split(":")
            if components.length >=2
@@ -45,14 +47,14 @@ class HTTPCommandParser
              puts "command params error : please use -m [path]:[class_name] style"
            end
         elsif primary_key_begin
-          @primary_key = prams
+          @primary_key = param
         end
       end
 
     end
    if @url_str !=nil && @url_str !=""
      parser = HTTPRequestDataParser.new
-     parser.flags = @prams
+     parser.flags = @params
      parser.primary_key = @primary_key
      parser.fetch(@url_str,@path_class_mapping)
      return true
