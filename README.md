@@ -7,6 +7,10 @@ ptgen is a commandline model generator for ios development.If you use [mantle](h
 * property and table column mapping
 * type and format transform
 
+####install
+
+	gem install PTGenerator
+
 #####ptgen use
 ptgen is commandline, you can use it create model file like rails.
 
